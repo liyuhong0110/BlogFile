@@ -1,7 +1,7 @@
 ---
 title: "LI Yuhong's Blog"
 description: |
-  This bolg was built for the ISSS608-Visual Analytics and Applications.
+  This blog was built for the ISSS608-Visual Analytics and Applications.
   Hope you can enjoy reading my blog.
 author:
   - name: LI Yuhong
