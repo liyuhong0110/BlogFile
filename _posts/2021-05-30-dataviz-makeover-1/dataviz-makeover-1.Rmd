@@ -1,10 +1,9 @@
 ---
 title: "DataViz Makeover 1"
 description: |
-  A short description of the post.
+  This post is built for DataViz Makeover 1 of ISSS608 Visual Analytics and    Application.
 author:
-  - name: Nora Jones
-    url: https://example.com/norajones
+  - name: LI Yuhong
 date: 05-30-2021
 output:
   distill::distill_article:
@@ -17,7 +16,6 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 # 1.	Introduction
-This post is built for DataViz Makeover 1 of ISSS608 Visual Analytics and Application.
 
 ## 1.1 Data Source
 The data visualisations, including the original one and the redesigned one, were created by using data provided by Department of Statistics, Singapore (DOS). The data are available under the sub-section of Merchandise Trade by Region/Market and are compiled by the Enterprise Singapore.
