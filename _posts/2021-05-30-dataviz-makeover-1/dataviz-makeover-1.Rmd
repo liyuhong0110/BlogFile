@@ -1,9 +1,9 @@
 ---
 title: "DataViz Makeover 1"
-description: |
-  This post is built for DataViz Makeover 1 of ISSS608 Visual Analytics and    Application.
+description: 
+This post is built for DataViz Makeover 1 of ISSS608 Visual Analytics and    Application.
 author:
-  - name: LI Yuhong
+  - name:  LI Yuhong
 date: 05-30-2021
 output:
   distill::distill_article:
