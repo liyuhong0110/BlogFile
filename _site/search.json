@@ -12,14 +12,14 @@
       ],
       "date": "05-30-2021",
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-05-30T22:19:41+08:00"
+      "last_modified": "2021-05-30T22:42:24+08:00"
     },
     {
       "path": "index.html",
       "title": "My Blog",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-05-30T22:16:19+08:00"
+      "last_modified": "2021-05-30T22:42:26+08:00"
     }
   ],
   "collections": ["posts/posts.json"]
