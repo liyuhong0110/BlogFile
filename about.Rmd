@@ -41,7 +41,7 @@ S/N | Critiques | Comments
 ## 2.2 Aesthetics
 S/N | Critiques | Comments 
 ----|-----------|----------
-8   |**The title’s font size**: The font size of chart title is not so large compared with other characters in the chart, so the readers cannot realize the title easily. It will be more reasonable to make the title’s font size bigger.|Make the title’s font size bigger.
+8  |**The title’s font size**: The font size of chart title is not so large compared with other characters in the chart, so the readers cannot realize the title easily. It will be more reasonable to make the title’s font size bigger.|Make the title’s font size bigger.
 9   |**The width of each graph is not the same**: The six graphs for each country showed the same period from 2019 to 2020, but the width is not the same in each graph. The uneven width can be confusing to the readers.|Fix the width of each graph consistent.
 10  |**The inappropriate chart type**: The overlap of import area and export area makes the graphs confusing and messy. It is difficult for readers to follow the edges of export or import area within the part of overlap, so readers cannot get information quickly and clearly. And the dark color of overlap areas makes the graphs messy.|Adjust the color of overlap area and change the graphs to line charts.
 
