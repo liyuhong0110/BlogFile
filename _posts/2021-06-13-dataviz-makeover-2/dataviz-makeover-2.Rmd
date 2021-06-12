@@ -1,0 +1,21 @@
+---
+title: "Dataviz Makeover 2"
+description: |
+  This post is built for DataViz Makeover 2 of ISSS608 Visual Analytics and    Application.
+author:
+  - name: LI Yuhong
+    url: {}
+date: 06-13-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+
