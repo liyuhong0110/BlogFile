@@ -8,6 +8,9 @@ date: 05-30-2021
 output:
   distill::distill_article:
     self_contained: false
+    toc: true
+    toc_depth: 2
+    number_sections: true
 ---
 
 
@@ -18,10 +21,10 @@ knitr::opts_chunk$set(echo = FALSE)
 # 1.	Introduction
 
 ## 1.1 Data Source
-The data visualisations, including the original one and the redesigned one, were created by using data provided by Department of Statistics, Singapore (DOS). The data are available under the sub-section of Merchandise Trade by Region/Market and are compiled by the Enterprise Singapore.
+The data visualisations, including the original one and the redesigned one, were created by using data provided by Department of Statistics, Singapore (DOS). The data are available under the sub-section of [Merchandise Trade by Region/Market](https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data) and are compiled by the Enterprise Singapore.
 
 ## 1.2 The Original Visualisation
-The original data visualisation that will be assessed was shown in Figure 1. This visualization shows the merchandise trade, including export and import, between Singapore and top six trading countries during the period from 2019 to 2020. Based on this visualisation, we should not only compare the quantity of merchandise trade among these six countries, but also compare the difference between export and import in each graph.
+The original data visualisation that will be assessed was shown in the following figure. This visualization shows the merchandise trade, including export and import, between Singapore and top six trading countries during the period from 2019 to 2020. Based on this visualisation, we should not only compare the quantity of merchandise trade among these six countries, but also compare the difference between export and import in each graph.
 
 ![](images\1.png)
 
