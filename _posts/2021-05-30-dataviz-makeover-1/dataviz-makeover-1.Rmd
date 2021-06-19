@@ -27,6 +27,7 @@ The data visualisations, including the original one and the redesigned one, were
 The original data visualisation that will be assessed was shown in the following figure. This visualization shows the merchandise trade, including export and import, between Singapore and top six trading countries during the period from 2019 to 2020. Based on this visualisation, we should not only compare the quantity of merchandise trade among these six countries, but also compare the difference between export and import in each graph.
 
 ![](images\1.png)
+*Figure 1*
 
 # 2.	Critiques and Suggestions
 ## 2.1 Clarity
@@ -51,6 +52,7 @@ S/N | Critiques | Comments
 ## 3.1 Sketch
 
 ![](images\2.jpg)
+*Figure 2*
 
 ## 3.2 Advantages of Proposed Design
 1)	**Clear title**: shows Singapore's merchandise trade of Top Six Trading Countries in the period from 2019 to 2020.
@@ -67,55 +69,70 @@ S/N | Critiques | Comments
 Delete the “Content” worksheet and rename “T1” and “T2” to “Import” and “Export” respectively.
 
 ![](images\3.png)
+*Figure 3*
+
 ![](images\4.png)
+*Figure 4*
 
 2)	Remove unnecessary columns: 
 Only the data from 2019 to 2020 will be used, so the columns of other years should be removed from the worksheets of Import and Export.
 
 ![](images\5.png)
+*Figure 5*
 
 3)	Remove unnecessary rows:
 Only the data of Hong Kong, Mainland China, Japan, Malaysia, Taiwan and US will be used, so the introduction of the dataset and the data of other countries should be removed from the worksheets of Import and Export.
 
 ![](images\6.png)
+*Figure 6*
 
 4)	Transpose the data:
 The time is shown in the first row while the countries are shown in the first column, but we need to exchange the place of time and countries. Select and copy the area of dataset, and then right click in empty space to choose Transpose under the function of Paste Option. After pasting the data, the original data should be deleted and the dataset is shown as following. Complete this step in two worksheets.
 
 ![](images\7.png)
+*Fighre 7*
 
 5)	Rename the headers: 
 Change the headers of “Variables” to “Date” and complete similar step in the worksheet of Export.
 
 ![](images\8.png)
+*Fighre 8*
+
 ![](images\9.png)
+*Figure 9*
 
 6)	Create new worksheets for each country:
 Create a new worksheet called “Malaysia”, and then copy the date, Malaysia’ Import column and Malaysia’ Export column in this new worksheet. Add a new column of “Trade Balance” and then calculate the value of it by “Export”-“Import”. Using the similar steps, the new worksheets for other countries were created.
 
 ![](images\10.png)
+*Figure 10*
 
 7)	Save and rename the Excel file:
 Change the File name of Excel to “Merchandise Trade” and then save it.
 
 ![](images\11.png)
+*Figure 11*
 
 ## 4.2 Import and Pivot Data
 Import the file of “Merchandise Trade” into Tableau. And then drag the table “Hong Kong” into table area.
 
 ![](images\12.png)
+*Figure 12*
 
 Combine all the other countries based on “Date”.
 
 ![](images\13.png)
+*Figure 13*
 
 Select the columns of “Import”, “Export” and “Trade Balance” and then right click to pivot these data. Change the data type of column “Date” to *Date*, and change the data type of column “Pivot Field Values” to *Number(whole).
 
 ![](images\14.png)
+*Figure 14*
 
 Change the name of “Pivot Field Names” to “Type” and change the name of “Pivot Field Values” to “Value”.
 
 ![](images\15.png)
+*Figure 15*
 
 Repeat the steps above in the tables of other countries.
 
@@ -123,40 +140,51 @@ Repeat the steps above in the tables of other countries.
 Change the name of sheet 1 and the title to “Hong Kong”. In this sheet, drag “Date (Hong Kong)” and “Value (Hong Kong)” into *Columns* and *Rows* respectively. Change the data type of “Date” to *Month*. And then drag “Type” to *Colour* under the function card of Marks. The line chart will be created as the following figure.
 
 ![](images\16.png)
+*Figure 16*
 
 Setting the same range of y axis is convenient for comparing among different graphs. After observing the range of all the charts, we knew that the range of y axis that suits all charts is from -3,000,000 to 8,000,000, so we should change the range of y axis in these six graphs. Edit Axis as the following figure.
 
 ![](images\17.png)
+*Figure 17*
 
 Add a reference line at the constant value of 0, and then adjust the reference line as the following figure in all the six graphs. The reference line can help readers to figure out whether the result of trade balance is surplus or deficit.
 
 ![](images\18.png)
+*Figure 18*
 
 Based on the original dataset, we knew that the currency used to measure is US dollar, so we should apply currency of US dollar in the units of graphs. Edit the units of “Value” by the steps shown in following figures and do the same steps for all graphs.
 
 ![](images\19.png)
+*Figure 19*
+
 ![](images\20.png)
+*Figure 20*
 
 By using the same manipulation in the sheet of “Hong Kong”, the worksheets of other countries were built.
 
 ![](images\21.png)
+*Figure 21*
 
 ## 4.4 Final Visualisation
 After building a new dashboard, add all the six graphs in it and adjust the position of graphs. Click “Show dashboard title”, and then edit the tile to “Singapore's Merchandise Trade (Export, Import and Trade Balance) of Top Six Trading Countries, 2019-2020”. Adjust the position and the font size for the title and subtitles.
 
 ![](images\22.png)
+*Figure 22*
 
 Edit board for each sub-graph.
 
 ![](images\23.png)
+*Figure 23*
 
 Delete redundant legends and rename the legend as the following.
 
 ![](images\24.png)
+*Figure 24*
 
 The snapshot of dashboard is shown in the following and then rename the dashboard to “Merchandise Trade”.
 
 ![](images\25.png)
+*Figure 25*
 
 # 5.	Main Observations
 **1)	Trade Scale of Import and Export**

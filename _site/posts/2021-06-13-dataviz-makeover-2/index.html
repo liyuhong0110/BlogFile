@@ -117,7 +117,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["images/1.png"]}
+  {"type":"character","attributes":{},"value":["dataviz-makeover-2_files/anchor-4.2.2/anchor.min.js","dataviz-makeover-2_files/bowser-1.9.3/bowser.min.js","dataviz-makeover-2_files/distill-2.2.21/template.v2.js","dataviz-makeover-2_files/header-attrs-2.8/header-attrs.js","dataviz-makeover-2_files/jquery-1.11.3/jquery.min.js","dataviz-makeover-2_files/popper-2.6.0/popper.min.js","dataviz-makeover-2_files/tippy-6.2.7/tippy-bundle.umd.min.js","dataviz-makeover-2_files/tippy-6.2.7/tippy-light-border.css","dataviz-makeover-2_files/tippy-6.2.7/tippy.css","dataviz-makeover-2_files/tippy-6.2.7/tippy.umd.min.js","dataviz-makeover-2_files/webcomponents-2.0.0/webcomponents.js","images/1.png","images/3.png","images/4.png","images/5.png","images/6.png","images/7.png","images/8.png","images/9.png"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content="../.."/>
@@ -2107,6 +2107,24 @@ document.addEventListener('DOMContentLoaded', function() {
 <li><a href="#data-source">1.1 Data Source</a></li>
 <li><a href="#the-original-visualisation">1.2 The Original Visualisation</a></li>
 </ul></li>
+<li><a href="#critiques-and-suggestions">2. Critiques and Suggestions</a>
+<ul>
+<li><a href="#clarity">2.1 Clarity</a></li>
+<li><a href="#aesthetics">2.2 Aesthetics</a></li>
+</ul></li>
+<li><a href="#proposed-visualisation">3. Proposed Visualisation</a>
+<ul>
+<li><a href="#sketch">3.1 Sketch</a></li>
+<li><a href="#advantages-of-proposed-design">3.2 Advantages of Proposed Design</a></li>
+</ul></li>
+<li><a href="#data-visualisation-steps">4. Data Visualisation Steps</a>
+<ul>
+<li><a href="#data-preparation">4.1 Data Preparation</a></li>
+<li><a href="#import-and-pivot-data">4.2 Import and Pivot Data</a></li>
+<li><a href="#data-visualisation">4.3 Data Visualisation</a></li>
+<li><a href="#final-visualisation">4.4 Final Visualisation</a></li>
+</ul></li>
+<li><a href="#main-observations">5. Main Observations</a></li>
 </ul>
 </nav>
 </div>
@@ -2114,8 +2132,144 @@ document.addEventListener('DOMContentLoaded', function() {
 <h2 id="data-source">1.1 Data Source</h2>
 <p>The data visualisations, including the original one and the redesigned one, were created by using data provided by Department of Statistics, Singapore (DOS). The data are available under the sub-section of <a href="https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data">Merchandise Trade by Region/Market</a> and are compiled by the Enterprise Singapore.</p>
 <h2 id="the-original-visualisation">1.2 The Original Visualisation</h2>
-<p>The original data visualisation that will be assessed was shown in the following figure. This visualization shows the merchandise trade, including export and import, between Singapore and top six trading countries during the period from 2019 to 2020.</p>
-<p><img src="images/1.png" /></p>
+<p>The original data visualisation that will be assessed was shown in the following figure. This visualization shows the merchandise trade, including export and import, between Singapore and top six trading countries during the period from January 2011 to December 2020.</p>
+<p><img src="images/1.png" /> <em>Figure 1</em></p>
+<h1 id="critiques-and-suggestions">2. Critiques and Suggestions</h1>
+<h2 id="clarity">2.1 Clarity</h2>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 44%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>S/N</th>
+<th>Critiques</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><strong>There is not a title</strong>: The lack of a title prevents the readers from quickly understanding the purpose of the visualisation. There are two notes for describing the information of this graph, but the long description is not so direct as a concise title.</td>
+<td>Add a concise title, like “Singapore’s Merchandise Trade Value with Ten Trading Partners, 2011-2020”.</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><strong>The lack of unit for x-axis and y-axis</strong>: There are a series of numbers in x-axis and y-axis to show the values of exports and imports respectively, but there is not a label to show the unit of x-axis and y-axis.</td>
+<td>Add the unit label of SGD in billion, “S$(Billion)” for x-axis and y-axis.</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><strong>The positions of titles for x-axis and y-axis are misleading</strong>: Although the colors and icons can help readers to distinguish which axis is for import value and which axis is for export value, the unreasonable positions (at the beginning of each axis) of “Exports” and “Imports” for x-axis and y-axis are still very confusing.</td>
+<td>Put the titles in the middle position of each axis.</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><strong>There is not information about the study period</strong>: We can’t know the study period of this visualisation.</td>
+<td>Add the period of “2011-2020” in the main title or add a note to show the period, “between January 2011-December 2020”.</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><strong>It is difficult to distinguish the import value and export value for each region</strong>: Because there are a large amount of overlap parts among some bubbles or some centre points were covered by the tooltips of total trade value, we can’t see all the centre points in the graph clearly. The hidden centre points prevent readers from knowing the import value and export value.</td>
+<td>Make the size of each bubble smaller to show all the cretre points and move the positions of some tooltips.</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><strong>The icons of “TOP NET EXPORTER” and “TOP NET IMPORTER” are confusing</strong>: When readers firstly see the icons of “TOP NET EXPORTER” and “TOP NET IMPORTER” in the graph, it is difficult for readers to know the meanings of the icons until they see the legends below. It is an indirect description.</td>
+<td>Change the icons in the graph to texts of “TOP NET EXPORTER” and “TOP NET IMPORTER” and then remove the legend below.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="aesthetics">2.2 Aesthetics</h2>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 44%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>S/N</th>
+<th>Critiques</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><strong>The unreasonable layouts of the graph, the legend and notes</strong>: The readers will be more easy to see the legend if the legend is closed to the graph part. However, positions of legends, “TOP NET EXPORTER” and “TOP NET IMPORTER”, are below the note in this graph, the position is abnormal.At the same time, the abnormal layout causes the whole visualisation chaotic.</td>
+<td>Put the legend on the left of the graph or above the note part.</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><strong>Too large size of the bubbles</strong>: Because there are some overlap part of bubbles due to the too large size, we can not see all the bubbles completely. Too large bubbles do not only cause difficulties in transferring information of the graph, but also cause the mussy layout.</td>
+<td>Make the size of bubbles smaller.</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><strong>Too many different fonts are used in this graph</strong>: There are three different fonts are used in the part of graph, note and information description respectively. The inconsistent fonts will cause the all visualisation no so beautiful and professional.</td>
+<td>Use the same font in the part of note and information description.</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><strong>The background color of information description part is too dark</strong>: The blue background color is more dark than other parts of this visualisation, so when readers see this visualisation, their attention will be caught by this part. The most important part, graph part, may not be focused on during readers’ first reading.</td>
+<td>Remove the background color of the information description part and change the font color to black as the font in note part.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="proposed-visualisation">3. Proposed Visualisation</h1>
+<h2 id="sketch">3.1 Sketch</h2>
+<p>*<img src="images/2.png" /></p>
+<h2 id="advantages-of-proposed-design">3.2 Advantages of Proposed Design</h2>
+<h1 id="data-visualisation-steps">4. Data Visualisation Steps</h1>
+<h2 id="data-preparation">4.1 Data Preparation</h2>
+<ol type="1">
+<li>Download the dataset from the website of Department of Statistics, Singapore(DOS), and then open the file by Excel.Delete the unnecessary sheet of “Content” and then rename the sheets of “T1” and “T2” as “Import” and “Export”.</li>
+</ol>
+<p><img src="images/3.png" /></p>
+<ol start="2" type="1">
+<li>Select the useless rows from 1 to 5 and from 100 to 112 in sheets of both “Import” and “Export”, and then delete these selected rows.</li>
+</ol>
+<p><img src="images/4.png" /></p>
+<ol start="3" type="1">
+<li>Select the columns that are not in the study period, and then delete them in sheets of both “Import” and “Export”.</li>
+</ol>
+<p><img src="images/5.png" /></p>
+<ol start="4" type="1">
+<li>After observing the values of dataset, we find that the unit for row 3 to 8 is different from other rows, so we should adjust the value to keep consistent unit. Enter “1000” in any empty cell, and copy it. Select the value part between row 3 and row 8, and then right click to choose “Paste Special”. Under the function of Operation, the “Multiply” choice was selected, and then we clicked “OK”. Do the same actions in both sheets, and clear the cell of “1000” after completing the above actions.</li>
+</ol>
+<p><img src="images/6.png" /></p>
+<ol start="5" type="1">
+<li>At last, save the file, “outputFile”.</li>
+</ol>
+<h2 id="import-and-pivot-data">4.2 Import and Pivot Data</h2>
+<ol type="1">
+<li>Import the file of “outputFile” into Tableau. And drag “Import” into the pane.</li>
+</ol>
+<p><img src="images/7.png" /></p>
+<ol start="2" type="1">
+<li>Select all the columns except the first column, and then right click to choose “Pivot”.</li>
+</ol>
+<p><img src="images/8.png" /></p>
+<ol start="3" type="1">
+<li>Rename the pivoted columns to “Period” and “Imports” respectively.</li>
+</ol>
+<p><img src="images/9.png" /></p>
+<ol start="5" type="1">
+<li>Do the same actions in the sheet of “Export”, and then save the file as “Export(outputFile)”.</li>
+</ol>
+<h2 id="data-visualisation">4.3 Data Visualisation</h2>
+<ol type="1">
+<li></li>
+</ol>
+<h2 id="final-visualisation">4.4 Final Visualisation</h2>
+<ol type="1">
+<li></li>
+</ol>
+<h1 id="main-observations">5. Main Observations</h1>
+<p><strong>1)</strong> <strong>2)</strong> <strong>3)</strong></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
