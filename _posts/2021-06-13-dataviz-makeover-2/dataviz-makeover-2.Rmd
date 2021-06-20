@@ -52,7 +52,7 @@ S/N | Critiques | Comments
 # 3.	Proposed Visualisation
 ## 3.1 Sketch
 
-![](images/2.png)
+![](images/2.jpg)
 
 ## 3.2 Advantages of Proposed Design
 1) **Clear and interactive title**: The main title "Singapore's Merchandise Trade Value with Trading Partners, (Period)" shows the purpose of the visulisation and provides an interactive part of "(Period)" which will change as the reader's choice.
