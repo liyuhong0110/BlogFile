@@ -38,7 +38,7 @@ S/N | Critiques | Comments
 2   |**The lack of unit for x-axis and y-axis**: There are a series of numbers in x-axis and y-axis to show the values of exports and imports respectively, but there is not a label to show the unit of x-axis and y-axis.|Add the unit label of SGD in billion, "S$(Billion)" for x-axis and y-axis. 
 3   |**The positions of titles for x-axis and y-axis are misleading**: Although the colors and icons can help readers to distinguish which axis is for import value and which axis is for export value, the unreasonable positions (at the beginning of each axis) of "Exports" and "Imports" for x-axis and y-axis are still very confusing.|Put the titles in the middle position of each axis.
 4   |**There is not information about the study period**: We can't know the study period of this visualisation.|Add the period of "2011-2020" in the main title or add a note to show the period, "between January 2011-December 2020".
-5   |**It is difficult to distinguish the import value and export value for each region**: Because there are a large amount of overlap parts among some bubbles or some centre points were covered by the tooltips of total trade value, we can't see all the centre points in the graph clearly. The hidden centre points prevent readers from knowing the import value and export value.|Make the size of each bubble smaller to show all the cretre points and move the positions of some tooltips.
+5   |**It is difficult to distinguish the import value and export value for each region**: Because there are a large amount of overlap parts among some bubbles or some centre points were covered by the labels of total trade value, we can't see all the centre points in the graph clearly. The hidden centre points prevent readers from knowing the import value and export value.|Make the size of each bubble smaller to show all the cretre points and move the positions of some labels.
 6   |**The icons of "TOP NET EXPORTER" and "TOP NET IMPORTER" are confusing**: When readers firstly see the icons of  "TOP NET EXPORTER" and "TOP NET IMPORTER" in the graph, it is difficult for readers to know the meanings of the icons until they see the legends below. It is an indirect description.|Change the icons in the graph to texts of "TOP NET EXPORTER" and "TOP NET IMPORTER" and then remove the legend below.
 
 ## 2.2 Aesthetics
@@ -52,9 +52,13 @@ S/N | Critiques | Comments
 # 3.	Proposed Visualisation
 ## 3.1 Sketch
 
-*![](images/2.png)
+![](images/2.png)
 
 ## 3.2 Advantages of Proposed Design
+1) **Clear and interactive title**: The main title "Singapore's Merchandise Trade Value with Trading Partners, (Period)" shows the purpose of the visulisation and provides an interactive part of "(Period)" which will change as the reader's choice.
+2) **Suitable size of the bubbles**: Adjust the size of bubbles in order to decrease the overlap area and show the bubble of each trading partner clearly.
+3) **Simple and clear layout**: Delete the unnecessary part of the visualisation, and adjust the layout of the visualisation.
+4) **The use of interactive techniques**: Add interactive techniques to give the reader more freedom to read the images. For example, the readers can change the year and trading partners they want to know by using the function of filter.
 
 # 4.	Data Visualisation Steps
 
@@ -71,35 +75,95 @@ S/N | Critiques | Comments
 
 ![](images/5.png)
 
-4) After observing the values of dataset, we find that the unit for row 3 to 8 is different from other rows, so we should adjust the value to keep consistent unit. Enter "1000" in any empty cell, and copy it. Select the value part between row 3 and row 8, and then right click to choose "Paste Special". Under the function of Operation, the "Multiply" choice was selected, and then we clicked "OK". Do the same actions in both sheets, and clear the cell of "1000" after completing the above actions.
+4) We will not use the data of continents and "Total Merchandise Imports", so the rows from 2 to 8 were seleced and deleted.
 
 ![](images/6.png)
 
-5. At last, save the file, "outputFile".
+5) After observing the values of dataset, we find that the unit for the dataset is "Thousand Dollars", so we should adjust the value. Enter "1000" in any empty cell, and copy it. Select the value part , and then right click to choose "Paste Special". Under the function of Operation, the "Multiply" choice was selected, and then we clicked "OK". Do the same actions in both sheets, and clear the cell of "1000" after completing the above actions.
+
+![](images/7.png)
+
+6) All the "Thousand Dollars" were replaced by empty by the function of Replace.
+
+![](images/8.png)
+
+7) At last, save the file, "outputFile".
 
 ## 4.2 Import and Pivot Data
 1) Import the file of "outputFile" into Tableau. And drag "Import" into the pane.
 
-![](images/7.png)
+![](images/9.png)
 
 2) Select all the columns except the first column, and then right click to choose "Pivot".
 
-![](images/8.png)
+![](images/10.png)
 
-3) Rename the pivoted columns to "Period" and "Imports" respectively.
+3) Rename the pivoted columns to "Period" and "Imports" respectively, and change the data type of "Period" column to *Date*.
 
-![](images/9.png)
+![](images/11.png)
 
-5) Do the same actions in the sheet of "Export", and then save the file as "Export(outputFile)".
+5) Do the similar actions in the sheet of "Export", but rename the pivoted columns to "Period (Export)" and "Exports" respectively. Combine the sheet of "Import" and "Export" by the Region and Period value as *figure 12*.
 
+![](images/12.png)
 
 ## 4.3 Data Visualisation
-1.
+1. Click **Analysis->Create Calculated Field**, and then create a new variable of "Total Trade". The formula of "Total Trade" is shown in the *Figure 13*.
+
+![](images/13.png)
+2. Drag the variables as *Figure 14*. And change the chart type to Circle.
+
+![](images/14.png)
+
+3. Edit the title of chart as *Figure 15*.
+
+![](images/15.png)
+
+4. Click **Analysis->Create Calculated Field**, and then create a new variable of "Reference Line". The formula of "Total Trade" is shown in the *Figure 16*.
+
+![](images/16.png)
+
+5. Drag "Reference Line" to Rows.
+
+![](images/17.png)
+
+6. Change the chart type to Line, and adjust the color opacity to 0. And then add the trend line by right click.
+
+![](images/18.png)
+7. Right click the "Reference Line" to choose dual axis. And then we got the following result. Right click the axis of Reference Line and show header.
+
+![](images/19.png)
+
+8. Adjust the Format of all the values as the following figures.
+
+![](images/20.png)
+![](images/21.png)
+
+9. Add the Labels of countries and values.
+
+![](images/22.png)
+10. Check "Show history".
+
+![](images/23.png)
 
 ## 4.4 Final Visualisation
-1.
+
+The snapshot of dashboard is shown in the following and then rename the dashboard to “Merchandise Trade”.
+
+![](images/24.jpg)
 
 # 5.	Main Observations
-**1)**
-**2)**
-**3)**
+**1) The change of trade roles within the given period**:
+Based on the change track of bubbles shown in the visualisation, we can know that the trade roles of most trading partners did not change during the study period, which means that most trading partners kept the roles of net exporters or net importers in this 10 years. However, there are still some changes of trade roles for some trading partners. For example, United State changed from net importers to net exporters from 2019 to 2020 while Malaysia changed from net exporters to net importers from 2018 to 2019.
+
+![](images/25.png)
+![](images/26.png)
+
+**2) Imbalance merchandise trade value among trading partners**:
+The position and size of bubbles show that most of the trading partners show relatively small trade values, and they are clustered in the lower left corner of the picture. The top 10 trading partners do far more trade than most other countries, both in terms of exports and imports. These large trading partners tend to be more developed or more populous economies.
+
+![](images/27.png)
+
+**3) Hong Kong and Taiwan are special trading partners for Singapore**:
+During the given 10 years, the positions of most trading partners, especially the large trading partners, were closed to the diagonal reference line, which means that the difference between exports and imports is not so large for most trading partners. However, the positions of Hong Kong and Taiwan are far from the diagonal reference line. This means that Hong Kong is a net exporters with relative larger trade surplus value while Taiwan is a net importers with relative relative larger trade deficit value.
+
+![](images/28.png)
