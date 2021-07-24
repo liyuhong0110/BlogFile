@@ -15,26 +15,8 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
-
-
-```{css, echo=TRUE}
-pre {
-  max-height: 1000px;
-  max-width: 30px;
-  overflow-y: scroll;
-  overflow_x: scroll;
-}
-
-pre[class] {
-  max-height: 1000px;
-  max-width: 30px;
-  overflow-y: scroll;
-  overflow_x: scroll;
-}
-```
-
 
 # 1. Overview
 ## 1.1 Background
@@ -49,29 +31,22 @@ The data used in this research is the movement and tracking data of employees. G
 
 Based on the given tracking data for the two weeks leading up to the disappearance, as well as credit card transactions and loyalty card usage data, we aim to use appropriate visually driven data analysis techniques to complete two objectives: 
 
-1. Identify anomalies and suspicious behaviors of employees.
+1. Identify anomalies and suspicious behaviors.
 
 2. Identify the owners of each credit and loyalty card .
 
 # 2. Literature Review
-The literature review focus on the utilization of "Network" packages.
+Data visualization is the practice of translating information into a visual context, such as a map or graph, to make data easier for the human brain to understand and pull insights from. The main goal of data visualization is to make it easier to identify patterns, trends and outliers in large data sets. It provides a quick and effective way to communicate information in a universal manner using visual information.
 
-word cloud
-
-line chart
-
-network and relationship
+In this research, the two main data visualization methods used to attain research goals and answer questions are graphs and maps. Graphs include stable graphs and interactive graphs and the main R packages used are *ggplot* and *plotly*. The *ggplot* package is the most popular data visualization package in the R community. It was created by Hadley Wickham in 2005. It was implemented based on Leland Wilkinson’s Grammar of Graphics — a general scheme for data visualization which breaks up graphs into semantic components such as scales and layers. While using ggplot2, we provide the data, call specific function, map our desired variables to aesthetics, define graphical arguments.
 
 # 3. Installation and load of R packages
-* Packages "tidyverse", "tidyr", "tidyverse" and"dplyr" will be used to clean and wrangle data for final visualization.
-
-* Packages "sp", "raster", "sf", "vctrs", "clock", "tmap", "rgdal", "readr" and "ggplot2" will be used for making visualization.
-
 The code chunks below are used to install and load the packages in R.
 
-```{r echo=TRUE}
+```{r}
 packages = c("tidyverse","tidyr","tidyverse","dplyr","sp","raster","sf",
-             "vctrs","clock","tmap","rgdal","readr","ggplot2")
+             "vctrs","clock","tmap","rgdal","readr","ggplot2","plotly","tmap","gganimate","av","gifski",
+             "igraph","tidygraph","ggraph","visNetwork","lubridate","DT")
 for (p in packages){
   if(!require(p, character.only = T)){
     install.packages(p)
@@ -80,29 +55,37 @@ for (p in packages){
 }
 ```
 
-# 4. Data Preparation
+# 4. Data Wrangling and Extraction
 ## 4.1 Data Import and View
 The data was imported by using read.csv().
 
-```{r echo=TRUE}
-cartrack <- read.csv("D:/SMU/Visual Analytics and Applications/Project and Assignment/Assignment/Challenge 2/MC2/car-assignments.csv")
+```{r}
+carassign <- read_csv("./MC2/car-assignments.csv")
 
-creditcard <- read.csv("D:/SMU/Visual Analytics and Applications/Project and Assignment/Assignment/Challenge 2/MC2/cc_data.csv")
+creditcard <- read.csv("./MC2/cc_data.csv")
 
-gps <- read.csv("D:/SMU/Visual Analytics and Applications/Project and Assignment/Assignment/Challenge 2/MC2/gps.csv")
+gps <- read_csv("./MC2/gps.csv")
 
-loyaltycard <- read.csv("D:/SMU/Visual Analytics and Applications/Project and Assignment/Assignment/Challenge 2/MC2/loyalty_data.csv")
+loyaltycard <- read.csv("./MC2/loyalty_data.csv")
+
+Abila_st <- st_read(dsn = "MC2/Geospatial",
+                    layer = "Abila")
+
 ```
+
+Change the data type of MC2-tourist.jpg to tif by save as. (*Figure 1*)
+
+![](images\0.png)
+*Figure 1*
 
 View the data by the following coding. 
 
-```{r echo=TRUE}
-view(cartrack)
-view(creditcard)
-view(gps)
-view(loyaltycard)
+```{r}
+head(carassign)
+head(creditcard)
+head(gps)
+head(loyaltycard)
 ```
-
 
 The overview of data are shown in Table 1.
 
@@ -110,20 +93,529 @@ The overview of data are shown in Table 1.
 
 S/N|Name of Data|Number of Observations|Variables
 ---|------------|----------------------|----------
-1|cartrack|44|LastName, FirstName, CarID, CurrentEmploymentType, CurrentEmploymentTitle
+1|carassign|44|LastName, FirstName, CarID, CurrentEmploymentType, CurrentEmploymentTitle
 2|creditcard|1490|timestamp, location, price, last4ccnum
 3|gps|685,169|Timestamp, id, lat, long
 4|loyaltycard|1392|timestamp, location, price, loyaltynum
 
-## 4.2 Data Wrangling
+## 4.2 Data Wrangling and Extraction
+### 4.2.1 Correct Data Type
+The columns of "timestamp" should be Date data type instead of character, so we change the data type as the following codes.
 
-## 4.3 Data Extraction
+```{r}
+# Change data type of columns "timestamp"
+creditcard$timestamp <- date_time_parse(creditcard$timestamp,
+                                 zone="",
+                                 format="%m/%d/%Y %H:%M")
 
-## 4.4 Final Data
+loyaltycard$timestamp <- date_time_parse(loyaltycard$timestamp,
+                                 zone="",
+                                 format="%m/%d/%Y")
 
-# 5. Data Visualisation and Analysis
-## 5.1 
+gps$Timestamp <- date_time_parse(gps$Timestamp,
+                                 zone="",
+                                 format="%m/%d/%Y %H:%M")
+```
 
-# 6. Conclusion
+### 4.2.2 Adjust Incorrect Columns
+There are some incorrect columns shown in *Figure 2* in the dataset of creditcard and loyaltycard.
+
+![](images\1.png)
+*Figure 2*
+
+For loyaltycard dataset, we correct this problem by the following codes and get the dataset of loyaltycard_final dataset which will be used in the following analysis.
+
+```{r}
+# Build the wrong loyaltycard dataset
+wrongloyalty <- loyaltycard %>%
+  filter(loyaltynum=="")
+wrongloyalty <- wrongloyalty[,-4]
+names(wrongloyalty)[3] <-"loyaltynum"
+wrongloyalty <- wrongloyalty %>%
+  separate(location,into = c("location","price"),sep ="\\?",convert = TRUE)
+head(wrongloyalty)
+
+# Remove Null rows
+loyaltycard <- loyaltycard %>%
+  filter(loyaltynum!="")
+
+# Change the data type of "price" column
+loyaltycard$price <- as.numeric(loyaltycard$price)
+class(loyaltycard$price)
+
+# Combine wrongloyaltycard and loyaltycard dataset to build final loyalty card dataset
+loyaltycard_final <- rbind(loyaltycard,wrongloyalty)
+```
+
+After completing the same actions in the creditcard dataset as following, we got the dataset of creditcard_final dadtaset.
+
+```{r}
+# Build the wrong creditcard dataset
+wrongcredit <- creditcard %>%
+  filter(is.na(last4ccnum))
+wrongcredit <- wrongcredit[,-4]
+names(wrongcredit)[3] <-"last4ccnum"
+wrongcredit <- wrongcredit %>%
+  separate(location,into = c("location","price"),sep ="\\?",convert = TRUE)
+head(wrongcredit) 
+
+# Remove Null rows
+creditcard <- creditcard %>%
+  filter(last4ccnum!="NA")
+
+# Combine wrongcredit and creditcard dataset to build final credit card dataset
+creditcard_final <- rbind(creditcard,wrongcredit)
+```
+
+FirstName and LastName columns can be combined to build a new column in the carassign dataset, and then a new dataset called carassign_final was built.
+
+```{r}
+# Combine FirstName and LastName columns
+carassign_final <- carassign %>% 
+  unite(Name,c("FirstName","LastName"), sep = " ")
+```
+
+### 4.2.3 Check Missing Values
+Then we check the missing values and view the wrangled dataset.
+
+```{r}
+# Identify missing values
+which(rowSums(is.na(loyaltycard_final))==TRUE)
+which(rowSums(is.na(creditcard_final))==TRUE)
+which(rowSums(is.na(carassign_final))==TRUE)
+which(rowSums(is.na(gps))==TRUE)
+
+# Check the dataset
+head(loyaltycard_final)
+head(creditcard_final)
+head(carassign_final)
+head(gps)
+```
+
+We can see that there are missing values (*Figure 3*) in rows from 36 to 44 in carassign_final dataset. It means that cardID is lack for truck drivers.
+
+![](images\2.png)
+*Figure 3*
+
+Because the trucks cannot be used for personal business and we didn't have the car ID for them, we cannot find the tracks and behaviors for these employees. Hence, we delete these rows by the following codes.
+
+```{r}
+# Filter the rows without NA
+carassign_final <- carassign_final %>% 
+  filter(CarID!="")
+```
+
+### 4.2.4 Data Extraction
+After observing we find that only car ID from 1 to 35 will be used, so car ID included other number *Figure 4* will be excluded from the analysis of gps dataset.
+
+![](images\3.png)
+*Figure 4*
+
+# 5. The Most Popular Locations
+## 5.1 Identification of Popular Locations
+There are two dataset can be used to identify the popular locations, and after obversing the relationship of two dataset we find that there is some purchase was recorded in both dataset due to the same purchase time and purchase price. Hence, we will be based on loyaltycard_final and creditcard_final respectively.
+
+### 5.1.1 Based on Loyalty Card Recording
+To identify the the popular locations based on loyalty card dataset, we use the following steps.
+
+```{r}
+# Calculate the number of locations appeared based on loyalty card
+location_num_loyaltycard <- loyaltycard_final %>% 
+  group_by(location) %>% 
+  summarise(num_loyalty=n()) %>% 
+  arrange(desc(num_loyalty))
+
+# Plot the number of locations appeared based on loyalty card
+p1 <- plot_ly(data = location_num_loyaltycard,
+              x = ~location,y = ~num_loyalty,
+              type="bar",
+              text = ~paste("Location:", location,
+                      "<br>Frequency:", num_loyalty)) %>% 
+  layout(yaxis = list(title = 'Frequency'),
+         xaxis = list(title = 'Location',
+                      categoryorder = "array",
+                      categoryarray = ~num_loyalty),
+         title = 'The Frequency of Each Location Based on Loyalty Card')
+p1
+```
+
+The graph shows that the five most popular locations is: Katerina’s Caf, Hippokampos, Guy's Gyros, Brew've Been Served, and Hallowed Grounds (*Figure 5*).
+
+![](images\4.png)
+
+*Figure 5*
+
+### 5.1.2 Based on Credit Card Recording
+To identify the the popular locations based on credit card dataset, we use the following steps.
+
+```{r}
+# Calculate the number of locations appeared based on credit card
+location_num_creidtcard <- creditcard_final %>% 
+  group_by(location) %>% 
+  summarise(num_credit=n()) %>% 
+  arrange(desc(num_credit))
+
+# Plot the number of locations appeared based on credit card
+p2 <- plot_ly(data = location_num_creidtcard,
+              x = ~location,y = ~num_credit,
+              type="bar",
+              text = ~paste("Location:", location,
+                      "<br>Frequency:", num_credit)) %>% 
+  layout(yaxis = list(title = 'Frequency of happened purchase'),
+         xaxis = list(title = 'Location',
+                      categoryorder = "array",
+                      categoryarray = ~num_credit),
+         title = 'The Frequency of Each Location Based on Credit Card')
+p2
+```
+
+The graph shows that the five most popular locations is: Katerina’s Caf, Hippokampos, Guy's Gyros, Brew've Been Served, and Hallowed Grounds (*Figure 6*), which is the same as the result based on loyalty card dataset.
+
+![](images\5.png)
+
+*Figure 6*
+
+## 5.2 Identification of Popular Periods
+The hour and minute was recorded in Timestamp columns in creditcard dataset, but not in loyalty dataset. Hence, we will figure out the popular days based on loyalty dataset, and find the pupular moment based on creditcard dataset.
+
+### 5.2.1 Based on Loyalty Card Recording
+Write the following codes to draw the graph for the five most popular locations.
+
+```{r}
+# Build new dataset for the five most popular locations
+loyalty_day <- loyaltycard_final %>% 
+  filter(location==c("Katerina’s Caf", "Hippokampos", "Guy's Gyros", 
+                     "Brew've Been Served", "Hallowed Grounds")) 
+
+# Build a new column for day and change the data type
+loyalty_day$day <- as.numeric(get_day(loyalty_day$timestamp))
+
+# Wrangle the dataset for the frequency of purchase for every day
+loyalty_day_num <- loyalty_day %>% 
+  group_by(day) %>% 
+  summarise(frequency=n())
+
+# Draw the graph
+p3 <- plot_ly(data = loyalty_day_num,
+              x = ~day, 
+              y = ~frequency, 
+              type = 'scatter', 
+              mode = 'lines',
+              text = ~paste("Day:", day,
+                      "<br>Frequency:", frequency),
+              name="Trend") %>% 
+  layout(yaxis = list(title = 'Frequency'),
+         xaxis = list(title = 'Day'),
+         title = "Frequency of Loyalty Card Purchase for Five Most Pupular Locations") %>% 
+  add_trace(mode = 'markers',
+            name="Detail")
+
+p3
+```
+
+The line graph shows that 2014/1/6, 2014/1/16 and 2014/1/17 are the most popular days for the five most popular locations due to the peak that appeared in these dates.
+
+### 5.2.2 Based on Credit Card Recording
+Write the following codes to draw the 2D Histograms graph for the 20 most popular locations.
+
+```{r}
+# Build new dataset for the five most popular locations
+credit_hour <- creditcard_final %>% 
+  filter(location==c("Katerina’s Caf", "Hippokampos", "Guy's Gyros", 
+                     "Brew've Been Served", "Hallowed Grounds")) 
+
+# Build a new column for day and change the data type
+credit_hour$hour <- as.numeric(get_hour(credit_hour$timestamp))
+
+# Wrangle the dataset for the frequency of purchase for every day
+credit_hour_num <- credit_hour %>% 
+  group_by(location,hour) %>% 
+  summarise(frequency=n())
+
+# Draw the graph
+p4 <- ggplot(data=credit_hour_num,
+             aes(x=location,y=hour,fill=frequency))+
+  geom_tile()+
+  scale_y_continuous(limits = c(0,24),
+                     breaks = c(0,2,4,6,8,10,12,14,16,18,20,22,24))+
+  scale_fill_gradient2(low="blue",
+                       high="red")+
+  labs(x="Location",
+       y="Hour",
+       title="Frequency of Credit Card Purchase for Five Most Popular Locations")+
+  theme(plot.title=element_text(hjust=0.5))
+p4
+```
+
+Based on the above graph, we can find that 7:00-8:00 is popular for Brew've Been Served and Hallowed Grounds, and 13:00-14:00 and 19:00-20:00 is popular for Katerina’s Caf, Hippokampos, Guy's Gyros.
+
+### 5.2.3 Anomalies
+1. Popular and Important Coffee Shops
+A large part of the most popular locations for GAStech employees are coffee shops. For example, three locations, Katerina’s Caf, Brew've Been Served, and Hallowed Grounds in the five most popular locations are coffee shops.
+
+Based on the frequency of purchase, we knew that there are a cycle of low frequency of purchase for the five most popular locations, and the time interval was 5 days. We can speculate that 2014/1/11, 2014/1/12, 2014/1/18 and 2014/1/19 are weekends. And after checking the calender, we can confirm our guess. Hence, we can conclude that these locations were the important locations for GAStech employees to break, have meals and work in weekdays, and employees went to these location less in weekends. The coffee shops provided suitable and comfortable environment for the GAStech employees who leaf companies.
+
+![](images\6.png)
+*Figure 7*
+
+2. Inconvenience for Having Meals
+According to the popular locations, we can know that restaurants were also the locations that the employees often drove to during the time for lunch and dinner. It means that employees could not have meals within GAStech or nearby GAStech, which caused inconvenience and time waste for employees.
+
+![](images\7.1.png)
+*Figure 8*
+
+3. Overtime Work
+Drinking coffee as breakfast or lunch is popular for GAStech employees, but the uncommon time of drinking coffee is likely to lead to overtime work. According to the frequency of purchase, Guy's Gyros,  Hippokampos, Katerina’s Caf were popular in 19:00-20:00, but coffee is not a wise choice to drink in the evening due to the probable insomnia problems. However, someone will drink coffee to keep the spirit in the evening in order to deal with their work. We can speculate overtime work is common for GAStech employees.
+
+![](images\7.2.png)
+*Figure 9*
+
+### 5.2.4 Recommendation
+1. GAStech should improve efficiency and arrange daytime reasonably to reduce overtime work and keep employees healthy.
+
+2. GAStech should provide more comfortable restaurants for employees within the area of company, which will be more convenient for employees to have their meals nearby instead of driving to have meals.
+
+3. For some necessary overtime work, the company should provide comfortable working space in the evening.
+
+# 6. Owner Inference
+## 6.1 Plot GPS Path and Stop-by Points for Each Car
+Using gps dataset, we can get maps of GPS paths and stop-by points for each car.
+
+Firstly, plot the map of Kronos and build the dataset of GPS path.
+
+```{r}
+# Import MC2-tourist.tif
+bgmap <- raster("MC2/MC2-tourist.tif")
+
+# Tidy up dataset
+gps_final1 <- gps
+
+gps_final1$id <- as_factor(gps_final1$id)
+gps_final1$day <- as.factor(get_day(gps_final1$Timestamp))
+
+gps_sf <- st_as_sf(gps_final1,                   
+                   coords=c("long","lat"),
+                   crs=4326)
+
+# Build the dataset of GPS path
+gps_path <- gps_sf %>%
+  group_by(id,day) %>%
+  summarize(m=mean(Timestamp),
+             do_union=FALSE) %>%
+  st_cast("LINESTRING")
+```
+
+And then we should figure out the stop-by points. In this part, the stop-by points mean that the person stops the cars for a period larger than 300 seconds (5 minutes). Start time means the start time of stopping cars and end time means the end time of stopping cars (restart cars and move forward). Time different (tdiff) is calculated by *End time-Start time*, and the stops of cars with a period larger than 300 seconds will be selected.
+
+```{r}
+# Calculate and select rows with the time difference larger than 300 seconds
+gps_stop <- gps
+
+gps_stop <- gps_stop %>% 
+  arrange(id,Timestamp)
+
+gps_stop$tdiff <- unlist(tapply(gps_stop$Timestamp, INDEX = gps_stop$id,
+                          FUN = function(x) c(0, `units<-`(diff(x),"secs"))))
+
+gps_stop <- gps_stop %>% 
+  filter(tdiff>300) %>% 
+  rename(endtime=Timestamp) %>% 
+  mutate(starttime=endtime-tdiff)
+
+gps_stop_sf <- st_as_sf(gps_stop,                   
+                   coords=c("long","lat"),
+                   crs=4326)
+```
+
+Plot the GPS path and stop-by points for each car, and we use the graph of the car whose ID is 1 as the example.
+
+```{r}
+# Set the tmap mode to "view"
+tmap_mode("view")
+
+# Select the dataset for ID 1 car 
+gps_stop_sf_selected <- gps_stop_sf %>%
+  filter(id==1)
+gps_path_selected <- gps_path %>%
+  filter(id==1)
+
+# Plot the map, GPS path and stop-by points
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_stop_sf_selected) +
+  tm_dots(size = 0.075)+
+  tm_shape(gps_path_selected) +
+  tm_lines(col = "day",
+           lwd = 3)
+```
+
+CarID|Path Plots|CarID|Path Plots
+---------------------------------
+1|![](images\8.png)|2|![](images\7.1.png)
+
+Based on the GPS path and stop-by points for each car, we can reassess the anomalies in 5.2.3. Coffee shops were indeed the popular locations due to frequent appears of stop-by points in coffee shops and someone would go to coffee shops in the evening after leaving the company (may work in coffee shops), as showing the following graph for car ID 6 in the date of 6.
+
+```{r}
+# Select the dataset for ID 6 car in the date of 6
+gps_stop_sf_selected_work <- gps_stop_sf %>%
+  filter(id==6,get_day(endtime)==6)
+gps_path_selected_work <- gps_path %>%
+  filter(id==6,day==6)
+
+# Plot the map, GPS path and stop-by points
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_stop_sf_selected_work) +
+  tm_dots(size = 0.075)+
+  tm_shape(gps_path_selected_work) +
+  tm_lines(col = "day",
+           lwd = 3)
+```
+
+After ID 6 car leaf GAStech at 17:30 at the date of 2012/1/6, the user of this car arrived Guy's Gyros (coffee shops) at 18:45 and arrived Katerina’s Caf at 20:14. The user may work in these two coffee shops.
+
+![](images\8.png)
+*Figure 10*
+
+## 6.2 Match Owners for Credit Card and Loyalty Card
+After observing, we knew that there are some purchase records show the same purchase price, purchase locations and purchase date in the dataset for both credit card and loyalty card, so we can speculate that the purchse records were done at the same time by the same person. Hence, we can match credit cards and loyalty cards firstly and then figure out the owners of them.
+
+```{r}
+# Match cards by the same purchase price, purchase locations and purchase date
+creditcard_final_day <- creditcard_final
+creditcard_final_day$timestamp <- format(creditcard_final_day$timestamp,format="%Y-%m-%d")
+loyaltycard_final_day <- loyaltycard_final
+loyaltycard_final_day$timestamp <- as.character(loyaltycard_final_day$timestamp)
+loyal_creidt <- inner_join(creditcard_final_day,loyaltycard_final_day,
+                          by=c("price","location","timestamp")) %>% 
+  select(last4ccnum,loyaltynum)
+
+# Build dataset for the result of matching
+loyal_creidt_unique <- unique(loyal_creidt) 
+loyal_creidt_unique <- loyal_creidt_unique%>% 
+  group_by(last4ccnum) %>%
+  summarise(loyaltynum = paste(loyaltynum, collapse = ", "))
+```
+
+
+```{r}
+# Transforming data
+creditcard_final_net <- creditcard_final
+
+creditcard_final_net$last4ccnum <- as.character(creditcard_final_net$last4ccnum)
+creditcard_final_net$Day  <-  get_day(creditcard_final_net$timestamp)
+creditcard_final_net$Hour <-  get_hour(creditcard_final_net$timestamp)
+
+# Creating nodes list
+sources <- creditcard_final_net %>%
+  distinct(last4ccnum) %>%
+  rename(label = last4ccnum)
+destinations <- creditcard_final_net %>%
+  distinct(location) %>%
+  rename(label = location)
+cc_nodes <- full_join(sources, 
+                   destinations, 
+                   by = "label")
+cc_nodes <- cc_nodes %>% 
+  rowid_to_column("id")
+
+# Creating and tidying edges list
+edges <- creditcard_final_net %>%  
+  group_by(last4ccnum, location, Day, Hour) %>%
+  summarise(weight = n()) %>% 
+  ungroup()
+
+cc_edges <- edges %>% 
+  left_join(cc_nodes, 
+            by = c("last4ccnum" = "label")) %>% 
+  rename(from = id)
+
+cc_edges <- cc_edges %>% 
+  left_join(cc_nodes, 
+            by = c("location" = "label")) %>% 
+  rename(to = id)
+
+cc_edges <- select(cc_edges, from, to, 
+                   Day, Hour, weight)
+
+cc_graph <- tbl_graph(nodes = cc_nodes, 
+                      edges = cc_edges, 
+                      directed = FALSE)
+
+visNetwork(cc_nodes,
+           cc_edges) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visOptions(highlightNearest = TRUE,
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visLayout(randomSeed = 123)
+
+```
+
+
+```{r}
+creditcard_final_loyalty_DT <- creditcard_final %>% 
+  group_by(last4ccnum,location) %>% 
+  summarise(purchasenum=n())
+creditcard_final_loyalty_DT <- left_join(creditcard_final_loyalty_DT,
+                                           loyal_creidt_unique,
+                                           by="last4ccnum")
+creditcard_final_loyalty_DT <- creditcard_final_loyalty_DT %>% 
+  arrange(desc(purchasenum))
+
+# Build DT
+DT::datatable(creditcard_final_loyalty_DT)
+
+```
+
+```{r}
+gps_stop_1200 <- gps_stop %>% 
+  filter(tdiff>1200)
+
+gps_stop_1200$cc_purchase <- ""
+
+gps_stop_1200 <- gps_stop_1200 %>% 
+  filter(id==1)
+
+creditcard_final_loyalty <- left_join(creditcard_final,
+                                     loyal_creidt_unique,
+                                     by="last4ccnum")
+
+within<-function(time,starttime,endtime,ccnum){
+  if (starttime<time&time<endtime)
+    return(ccnum)
+}
+
+#for (i in 1:1490){
+  #  for (j in 1:87){
+   #   a <- within(creditcard_final_loyalty[i,1],
+    #              gps_stop_1200[j,6],
+    #              gps_stop_1200[j,1],
+    #              creditcard_final_loyalty[i,4])
+    #  gps_stop_1200[j,7] <- paste(gps_stop_1200[j,7],as.character(a),sep = " ")
+   #   a <- ""
+ #   }
+#}
+  
+```
+
+
+## 6.3 Uncertainties
+
+
+# 7. Anomalies and Suspicious Activity
+## 7.1 Evidence
+
+## 7.2 Location Identification
+
+# 8. Conclusion
 
 
