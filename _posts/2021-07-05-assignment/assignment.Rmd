@@ -632,7 +632,7 @@ Based on the above graph, the official relationship within employees in GASTech 
 
 ## 8. Some Suspicious Activities
 1. Strange GPS Paths
-The GPA path of Cazar Gustav, whose carID is 9,
+The GPA path of Cazar Gustav, whose carID is 9, was extremely chaos, and sometimes the path would cross some areas there were not roads. This GPS path was illogical and abnormal, and the probalaly reason was that the 
 
 ![](images\ID9.png)
 
@@ -641,5 +641,5 @@ The GPA path of Borrasca Isande, whose carID is
 
 ![](images\ID28.png)
 
-#9. Conclusion
+# 9. Conclusion
 In this research, we use the tracking data of cars, job information of each employees and purchase records of credit card and loyalty card to complete two main objectives of identifying suspicious behaviors and inferring the owners of each credit card and loyalty card by suitable techniques of visualization. After data wrangling and data extraction, the the most popular five locations and the popular periods were figured out, and then the anomalies, like overtime work and inconvenient meals, were found. Secondly, after adding GPS track data the method of matching owners with credit card and loyalty card was built, and we used one credit card as exmaple to show the steps in detail. At the same time, the relationship among all employees was shown by hierarchical graph based on the job information. Last but not least, according to the GPS path and stop-by points of each person, some suspicious activities and locations were figured out to help to retrieve the truth of disappearance.
