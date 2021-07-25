@@ -33,7 +33,7 @@ Based on the given tracking data for the two weeks leading up to the disappearan
 
 1. Identify anomalies and suspicious behaviors.
 
-2. Identify the owners of each credit and loyalty card .
+2. Identify the owners of each credit and loyalty card.
 
 # 2. Literature Review
 Data visualization is the practice of translating information into a visual context, such as a map or graph, to make data easier for the human brain to understand and pull insights from. The main goal of data visualization is to make it easier to identify patterns, trends and outliers in large data sets. It provides a quick and effective way to communicate information in a universal manner using visual information.
@@ -46,7 +46,7 @@ The code chunks below are used to install and load the packages in R.
 ```{r}
 packages = c("tidyverse","tidyr","tidyverse","dplyr","sp","raster","sf",
              "vctrs","clock","tmap","rgdal","readr","ggplot2","plotly","tmap","gganimate","av","gifski",
-             "igraph","tidygraph","ggraph","visNetwork","lubridate","DT")
+             "igraph","tidygraph","ggraph","visNetwork","lubridate","DT","collapsibleTree")
 for (p in packages){
   if(!require(p, character.only = T)){
     install.packages(p)
@@ -606,29 +606,24 @@ To find the owner of cards we will take the following steps (Use the credit card
 
 2. The purchase records of some credit cards were strange. For these credit cards, purchase records of one credit card were recorded in different loyalty cards. It seems that the owner of this credit card had two of more loyalty cards or the owner would borrow other persons' loyalty cards.
 
+3. The timestamp column of loyalty card dataset is different from the timestamp column of credit card dataset, and it only shows the date but not the time in detail. Hence, we can not match the loyalty card number and credit card number accurately according to the same timestamp value.
+
 # 7. Relationship of Employees
+To find the relationship of employees, we should plot the network through tree map.
 
 ```{r}
-carassign_final$company <- "GASTech"
-
-# transform it to a edge list!
-edges_level1_2 <- carassign_final %>% 
-  select(company, CurrentEmploymentType) %>% 
-  unique %>% 
-  rename(from=company, to=CurrentEmploymentType)
-edges_level2_3 <- carassign_final %>% 
-  select(CurrentEmploymentType, CurrentEmploymentTitle) %>% 
-  unique %>% rename(from=CurrentEmploymentType, to=CurrentEmploymentTitle)
-edge_list=rbind(edges_level1_2, edges_level2_3)
- 
-# Now we can plot that
-p6 <- graph_from_data_frame(edge_list)
-ggraph(p6, layout = 'dendrogram', circular = FALSE) + 
-  geom_edge_diagonal() +
-  geom_node_point() +
-  theme_void()
+# Now we can plot the tree maps
+p6 <- collapsibleTree(carassign_final,
+                      hierarchy = c("CurrentEmploymentType", "CurrentEmploymentTitle","Name"),
+                      root = "GASTech",
+                      width = 800)
+p6
 ```
 
+Based on the above graph, the official relationship within employees in GASTech can be got. For example, there were five employees (one is IT helpdesk, three are IT Technician and the remaining one is IT Group Manager) whose work type was relative to Information Technology. Hence, they were likely to be colleagues, and IT Group Manager, Linnea Bergen, was the leader of other four employees.
+
+![](images\11.png)
+*Figure 15*
 
 # 8. Suspicious Activities and Locations
 ## 8.1 
@@ -636,10 +631,15 @@ ggraph(p6, layout = 'dendrogram', circular = FALSE) +
 ## 8.2 
 
 ## 8. Some Suspicious Activities
-1. Strange GPS paths
+1. Strange GPS Paths
+The GPA path of Cazar Gustav, whose carID is 9,
 
-2. 
+![](images\ID9.png)
 
-# 8. Conclusion
+2. Quivering Driving Paths
+The GPA path of Borrasca Isande, whose carID is
 
+![](images\ID28.png)
 
+#9. Conclusion
+In this research, we use the tracking data of cars, job information of each employees and purchase records of credit card and loyalty card to complete two main objectives of identifying suspicious behaviors and inferring the owners of each credit card and loyalty card by suitable techniques of visualization. After data wrangling and data extraction, the the most popular five locations and the popular periods were figured out, and then the anomalies, like overtime work and inconvenient meals, were found. Secondly, after adding GPS track data the method of matching owners with credit card and loyalty card was built, and we used one credit card as exmaple to show the steps in detail. At the same time, the relationship among all employees was shown by hierarchical graph based on the job information. Last but not least, according to the GPS path and stop-by points of each person, some suspicious activities and locations were figured out to help to retrieve the truth of disappearance.
