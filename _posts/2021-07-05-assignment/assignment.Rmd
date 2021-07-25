@@ -38,7 +38,7 @@ Based on the given tracking data for the two weeks leading up to the disappearan
 # 2. Literature Review
 Data visualization is the practice of translating information into a visual context, such as a map or graph, to make data easier for the human brain to understand and pull insights from. The main goal of data visualization is to make it easier to identify patterns, trends and outliers in large data sets. It provides a quick and effective way to communicate information in a universal manner using visual information.
 
-In this research, the two main data visualization methods used to attain research goals and answer questions are graphs and maps. Graphs include stable graphs and interactive graphs and the main R packages used are *ggplot* and *plotly*. The *ggplot* package is the most popular data visualization package in the R community. It was created by Hadley Wickham in 2005. It was implemented based on Leland Wilkinson’s Grammar of Graphics — a general scheme for data visualization which breaks up graphs into semantic components such as scales and layers. While using ggplot2, we provide the data, call specific function, map our desired variables to aesthetics, define graphical arguments.
+In this research, the two main data visualization methods used to attain research goals and answer questions are graphs and maps. Graphs include stable graphs and interactive graphs and the main R packages used are *ggplot* and *plotly*. The *ggplot* package is the most popular data visualization package in the R community. It was created by Hadley Wickham in 2005. It was implemented based on Leland Wilkinson’s Grammar of Graphics — a general scheme for data visualization which breaks up graphs into semantic components such as scales and layers. While using ggplot2, we provide the data, call specific function, map our desired variables to aesthetics, define graphical arguments. The *plotly* is a R package for creating interactive web-based graphs via the open source JavaScript graphing library plotly.js.
 
 # 3. Installation and load of R packages
 The code chunks below are used to install and load the packages in R.
@@ -196,14 +196,6 @@ We can see that there are missing values (*Figure 3*) in rows from 36 to 44 in c
 
 ![](images\2.png)
 *Figure 3*
-
-Because the trucks cannot be used for personal business and we didn't have the car ID for them, we cannot find the tracks and behaviors for these employees. Hence, we delete these rows by the following codes.
-
-```{r}
-# Filter the rows without NA
-carassign_final <- carassign_final %>% 
-  filter(CarID!="")
-```
 
 ### 4.2.4 Data Extraction
 After observing we find that only car ID from 1 to 35 will be used, so car ID included other number *Figure 4* will be excluded from the analysis of gps dataset.
@@ -453,10 +445,6 @@ tm_shape(bgmap) +
            lwd = 3)
 ```
 
-CarID|Path Plots|CarID|Path Plots
----------------------------------
-1|![](images\8.png)|2|![](images\7.1.png)
-
 Based on the GPS path and stop-by points for each car, we can reassess the anomalies in 5.2.3. Coffee shops were indeed the popular locations due to frequent appears of stop-by points in coffee shops and someone would go to coffee shops in the evening after leaving the company (may work in coffee shops), as showing the following graph for car ID 6 in the date of 6.
 
 ```{r}
@@ -485,7 +473,7 @@ After ID 6 car leaf GAStech at 17:30 at the date of 2012/1/6, the user of this c
 ![](images\8.png)
 *Figure 10*
 
-## 6.2 Match Owners for Credit Card and Loyalty Card
+## 6.2 Methods of Matching Owners for Cards
 After observing, we knew that there are some purchase records show the same purchase price, purchase locations and purchase date in the dataset for both credit card and loyalty card, so we can speculate that the purchse records were done at the same time by the same person. Hence, we can match credit cards and loyalty cards firstly and then figure out the owners of them.
 
 ```{r}
@@ -505,6 +493,7 @@ loyal_creidt_unique <- loyal_creidt_unique%>%
   summarise(loyaltynum = paste(loyaltynum, collapse = ", "))
 ```
 
+We build the network graph to show the relationship between cards and locations according to the purchase records of credit cards.
 
 ```{r}
 # Transforming data
@@ -550,6 +539,7 @@ cc_graph <- tbl_graph(nodes = cc_nodes,
                       edges = cc_edges, 
                       directed = FALSE)
 
+# Plot the interactive network
 visNetwork(cc_nodes,
            cc_edges) %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
@@ -560,8 +550,10 @@ visNetwork(cc_nodes,
 
 ```
 
+By choosing the credit card ID we can know the locations that this card was used in the given period of two weeks. To know more about the details, like purchase frequency in each location and corresponding loyalty cards, we built a data table that can help us to finding the card owners more accurately.
 
 ```{r}
+# Prepare dataset
 creditcard_final_loyalty_DT <- creditcard_final %>% 
   group_by(last4ccnum,location) %>% 
   summarise(purchasenum=n())
@@ -576,45 +568,77 @@ DT::datatable(creditcard_final_loyalty_DT)
 
 ```
 
+To find the owner of cards we will take the following steps (Use the credit card whose last4ccnum is 4795 as the example):
+
+1. Choose the ID of 4795 in the network graph and then the locations that this card was used in were shown.
+
+![](images\9.png)
+*Figure 11*
+
+2. After comparing the purchase locations with GPS path and stop-by points graphs of all the cars, we can find the Car ID of probable owners because the stop-by points were probably the same as or similar as the purchase locations. 
+
+3. The following GPS path and stop-by points graphs was selected as the best candidate. The car ID of this graph is 17, and the name of car user is Flecha Sven.
+
+![](images\ID17.png)
+*Figure 12*
+
+4. In order to ensure the accuracy of judging, we should choose some locations to compare time of stop-by and time of purchase records. If the most time is similar and reasonable, we could be more confident about the result of matching.
+![](images\9.1.png)
+*Figure 13*
+
+![](images\9.2.png)
+*Figure 14*
+
+5. We search 4795 in the data table and then we got the corresponding loyalty card number of L8566 and L2070.
+
+![](images\10.png)
+*Figure 15*
+
+6. We can conclude that Flecha Sven may be the owner of credit card 4795 and loyalty card L8566 and L2070.
+
+## 6.3 Uncertainties of Methods
+1. Because we needed to compare the purchase locations with GPS path and stop-by points graphs of all the cars, there were potential possibility of judging wrongly and mismatching the owner with the cards.
+
+2. Long time was needed to judge and match each card and each person.
+
+## 6.4 Uncertainties in Dataset
+1. The lack of geographical coordinates for each locations caused difficulties for us to confirm each location, and we could only find the locations in the map. And if there were geographical coordinates for each locations, we could plot the purchase records in the map directly and then compared with the GPS Path to match owners and cards. It will be more accurate and efficient to complete the task of matching.
+
+2. The purchase records of some credit cards were strange. For these credit cards, purchase records of one credit card were recorded in different loyalty cards. It seems that the owner of this credit card had two of more loyalty cards or the owner would borrow other persons' loyalty cards.
+
+# 7. Relationship of Employees
+
 ```{r}
-gps_stop_1200 <- gps_stop %>% 
-  filter(tdiff>1200)
+carassign_final$company <- "GASTech"
 
-gps_stop_1200$cc_purchase <- ""
-
-gps_stop_1200 <- gps_stop_1200 %>% 
-  filter(id==1)
-
-creditcard_final_loyalty <- left_join(creditcard_final,
-                                     loyal_creidt_unique,
-                                     by="last4ccnum")
-
-within<-function(time,starttime,endtime,ccnum){
-  if (starttime<time&time<endtime)
-    return(ccnum)
-}
-
-#for (i in 1:1490){
-  #  for (j in 1:87){
-   #   a <- within(creditcard_final_loyalty[i,1],
-    #              gps_stop_1200[j,6],
-    #              gps_stop_1200[j,1],
-    #              creditcard_final_loyalty[i,4])
-    #  gps_stop_1200[j,7] <- paste(gps_stop_1200[j,7],as.character(a),sep = " ")
-   #   a <- ""
- #   }
-#}
-  
+# transform it to a edge list!
+edges_level1_2 <- carassign_final %>% 
+  select(company, CurrentEmploymentType) %>% 
+  unique %>% 
+  rename(from=company, to=CurrentEmploymentType)
+edges_level2_3 <- carassign_final %>% 
+  select(CurrentEmploymentType, CurrentEmploymentTitle) %>% 
+  unique %>% rename(from=CurrentEmploymentType, to=CurrentEmploymentTitle)
+edge_list=rbind(edges_level1_2, edges_level2_3)
+ 
+# Now we can plot that
+p6 <- graph_from_data_frame(edge_list)
+ggraph(p6, layout = 'dendrogram', circular = FALSE) + 
+  geom_edge_diagonal() +
+  geom_node_point() +
+  theme_void()
 ```
 
 
-## 6.3 Uncertainties
+# 8. Suspicious Activities and Locations
+## 8.1 
 
+## 8.2 
 
-# 7. Anomalies and Suspicious Activity
-## 7.1 Evidence
+## 8. Some Suspicious Activities
+1. Strange GPS paths
 
-## 7.2 Location Identification
+2. 
 
 # 8. Conclusion
 
