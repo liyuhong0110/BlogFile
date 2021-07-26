@@ -616,7 +616,13 @@ To find the relationship of employees, we should plot the network through tree m
 p6 <- collapsibleTree(carassign_final,
                       hierarchy = c("CurrentEmploymentType", "CurrentEmploymentTitle","Name"),
                       root = "GASTech",
-                      width = 800)
+                      width = 800,
+                      fill = c("seashell",
+    rep("brown", length(unique(carassign_final$CurrentEmploymentType))),
+    rep("khaki", length(unique(paste(carassign_final$CurrentEmploymentType,
+                                     carassign_final$CurrentEmploymentTitle)))),
+    rep("forestgreen", length(unique(paste(carassign_final$Name,
+                                           carassign_final$CurrentEmploymentType))))))
 p6
 ```
 
@@ -626,18 +632,49 @@ Based on the above graph, the official relationship within employees in GASTech 
 *Figure 15*
 
 # 8. Suspicious Activities and Locations
-## 8.1 
+## 8.1 Desafio Golf Course
 
-## 8.2 
+![](images\12.png)
 
-## 8. Some Suspicious Activities
+## 8.2 Alberts Fine Clothing
+
+![](images\13.png)
+
+```{r}
+# Set the tmap mode to "view"
+tmap_mode("view")
+
+# Select the dataset for ID 1 car 
+gps_stop_sf_selected <- gps_stop_sf %>%
+  filter(id==31)
+gps_path_selected <- gps_path %>%
+  filter(id==31)
+
+# Plot the map, GPS path and stop-by points
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_stop_sf_selected) +
+  tm_dots(size = 0.075)+
+  tm_shape(gps_path_selected) +
+  tm_lines(col = "day",
+           lwd = 3,
+           text = ~paste("Day:", day,
+                      "<br>Car ID:", id))
+```
+
+
+## 8.1 Some Suspicious Activities
 1. Strange GPS Paths
-The GPA path of Cazar Gustav, whose carID is 9, was extremely chaos, and sometimes the path would cross some areas there were not roads. This GPS path was illogical and abnormal, and the probalaly reason was that the 
+The GPA path of Cazar Gustav, whose carID is 9, was extremely chaos, and sometimes the path would cross some areas there were not roads. This GPS path was illogical and abnormal, and the probably reason was that GPS device was wrong or the user of this car liked to try some unusual shortcuts.
 
 ![](images\ID9.png)
 
 2. Quivering Driving Paths
-The GPA path of Borrasca Isande, whose carID is
+The GPA path of Borrasca Isande, whose carID is 28, was quivering when running in the roads. We can suspect that the GPS device was also wrong or the user of this car was a crazy driver in the road.
 
 ![](images\ID28.png)
 
