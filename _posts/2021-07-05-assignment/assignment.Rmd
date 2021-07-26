@@ -629,39 +629,100 @@ p6
 Based on the above graph, the official relationship within employees in GASTech can be got. For example, there were five employees (one is IT helpdesk, three are IT Technician and the remaining one is IT Group Manager) whose work type was relative to Information Technology. Hence, they were likely to be colleagues, and IT Group Manager, Linnea Bergen, was the leader of other four employees.
 
 ![](images\11.png)
-*Figure 15*
+*Figure 16*
 
 # 8. Suspicious Activities and Locations
+In order to compare the path of each employee for every day, we divided the GPS path by every day as the following. And then we plotted the maps for all employees and then tried to find suspicious activities and locations. Make car of ID 19 as example.
+
+```{r}
+# Try to plot the needed graphs
+# Set the tmap mode to "view"
+tmap_mode("view")
+
+# Select the dataset for ID 1 car 
+gps_stop_sf_selected <- gps_stop_sf %>%
+  filter(id==19)
+gps_stop_sf_selected_day <- gps_stop_sf_selected %>% 
+  mutate(day=get_day(endtime))
+gps_stop_sf_selected_day$day <- as.factor(gps_stop_sf_selected_day$day)
+gps_path_selected <- gps_path %>%
+  filter(id==19)
+
+# Plot the map, GPS path and stop-by points
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_stop_sf_selected_day) +
+  tm_dots(size = 0.5,
+          col = "day")+
+  tm_shape(gps_path_selected) +
+  tm_lines(col = "day",
+           lwd = 7)+
+  tm_facets(by = "day",
+            ncol = 2,
+            free.scales = FALSE)+
+  tm_layout(legend.title.size=1,
+            legend.text.size = 0.6)
+```
+
 ## 8.1 Desafio Golf Course
-Desafio Golf Course seemed to be a popular locations for GASTech employees to relax in weekends, but too many employees went here at the same time in the weekend just before the event of disappear.
+Desafio Golf Course seemed to be a popular locations for GASTech employees to relax in weekends, but too many employees went here at the same time in the weekend just before the event of disappear, like the owners of car with ID 4, 28, 31, 32, 35.
 
-![](images\12.png)
+![Figure 17. The GPS path of ID 28 on 2014/1/19](images\ID28-19.png)
 
-## 8.2 A White house
+According to the GPS records of the car of ID 31, we could know that this owner drove this car seldom. However, the owner drove out from 2014/1/17 to 2014/1/19, and went to the Desafio Golf Course on 2014/1/19 which was the date just before celebration. It was strange for a person who drove less to drive for continuous three days suddenly.
+
+![Figure 18. The GPS path of ID 31 on 2014/1/19](images\ID31-19.png)
+
+## 8.2 A White House
+There was a white house that some employees would start the path from here and return here after finishing whole day's schedual (ID 2, 3, 9, 10, 11, 19 and so on). We could make a conjecture that this white house is a residential zone for these persons. It may not be a suspicious location that related to the disappear event, but it is helpful for us to confirm the function of living for this white house when analyzing the behaviors of employees. 
 
 ![](images\14.png)
+*Figure 19*
+
+![Figure 20. The GPS path of ID 10 on 2014/1/7](images\id10-7.png)
 
 ## 8.3 Alberts Fine Clothing
-GPS path map showed that many employeew went to Alberts Fine Clothing after they completed the meeting at the white house, especially in the weekend days of 18 and 19. Though they probably made an appointment to go shopping together, but it was still very abnormal that several employees went to together. At the same time, Alberts Fine Clothing was an extremely popular locations among all the locations because almost every employees have the records of stopping and shopping here, though this clothing shop was far from GASTech. 
+GPS path map showed that many employeew went to Alberts Fine Clothing often, especially in the weekend days of 11, 12, 18 and 19. Though they probably made an appointment to go shopping together, but it was still very abnormal that several employees went to together. At the same time, Alberts Fine Clothing was an extremely popular locations among all the locations because almost every employees have the records of stopping and shopping here, though this clothing shop was far from GASTech. Although they might be buying the clothes for attending the celebration of their company, the extremely high frequency was suspicious.
 
 ![](images\13.png)
+*Figure 21*
+
+Especially, the owner of the car with the ID of 7 and 32 went to Alberts Fine Clothing almost every weekday.
+
+![Figure 22. The GPS path of ID 7 on 2014/1/13](images\id7-15.png)
+
+In the weekend, many employees, like the owner of ID 2 car, would leave their residential zones and make a special trip to this clothing store.
+
+![Figure 23. The GPS path of ID 2 on 2014/1/19](images\id2-19.png)
 
 ## 8.4 Roberts and Son's
-It was also a very popular locations for employees to meet, but we didn't make accurate justification about the function or type of this shop from its name.
+It was also a very popular locations for employees, but we didn't make accurate justification about function or type of this shop from its name. Many
 
 ![](images\15.png)
+*Figure 24*
 
+Some persons would drive for a bit long time to this location at noon after leave company, like owners of cars of ID 11 and 19.
+
+![Figure 25. The GPS path of ID 11 on 2014/1/13](images\id11-13.png)
+
+![Figure 26. The GPS path of ID 19 on 2014/1/15](images\id19-15.png)
 
 ## 8.5 Some Suspicious Activities
 1. Strange GPS Paths
 The GPA path of Cazar Gustav, whose carID is 9, was extremely chaos, and sometimes the path would cross some areas there were not roads. This GPS path was illogical and abnormal, and the probably reason was that GPS device was wrong or the user of this car liked to try some unusual shortcuts.
 
 ![](images\ID9.png)
+*Figure 27*
 
 2. Quivering Driving Paths
 The GPA path of Borrasca Isande, whose carID is 28, was quivering when running in the roads. We can suspect that the GPS device was also wrong or the user of this car was a crazy driver in the road.
 
 ![](images\ID28.png)
+*Figure 28*
 
 # 9. Conclusion
 In this research, we use the tracking data of cars, job information of each employees and purchase records of credit card and loyalty card to complete two main objectives of identifying suspicious behaviors and inferring the owners of each credit card and loyalty card by suitable techniques of visualization. After data wrangling and data extraction, the the most popular five locations and the popular periods were figured out, and then the anomalies, like overtime work and inconvenient meals, were found. Secondly, after adding GPS track data the method of matching owners with credit card and loyalty card was built, and we used one credit card as exmaple to show the steps in detail. At the same time, the relationship among all employees was shown by hierarchical graph based on the job information. Last but not least, according to the GPS path and stop-by points of each person, some suspicious activities and locations were figured out to help to retrieve the truth of disappearance.
