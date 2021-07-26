@@ -427,9 +427,9 @@ tmap_mode("view")
 
 # Select the dataset for ID 1 car 
 gps_stop_sf_selected <- gps_stop_sf %>%
-  filter(id==1)
+  filter(id==2)
 gps_path_selected <- gps_path %>%
-  filter(id==1)
+  filter(id==2)
 
 # Plot the map, GPS path and stop-by points
 tm_shape(bgmap) +
@@ -633,41 +633,26 @@ Based on the above graph, the official relationship within employees in GASTech 
 
 # 8. Suspicious Activities and Locations
 ## 8.1 Desafio Golf Course
+Desafio Golf Course seemed to be a popular locations for GASTech employees to relax in weekends, but too many employees went here at the same time in the weekend just before the event of disappear.
 
 ![](images\12.png)
 
-## 8.2 Alberts Fine Clothing
+## 8.2 A White house
+
+![](images\14.png)
+
+## 8.3 Alberts Fine Clothing
+GPS path map showed that many employeew went to Alberts Fine Clothing after they completed the meeting at the white house, especially in the weekend days of 18 and 19. Though they probably made an appointment to go shopping together, but it was still very abnormal that several employees went to together. At the same time, Alberts Fine Clothing was an extremely popular locations among all the locations because almost every employees have the records of stopping and shopping here, though this clothing shop was far from GASTech. 
 
 ![](images\13.png)
 
-```{r}
-# Set the tmap mode to "view"
-tmap_mode("view")
+## 8.4 Roberts and Son'
+It was also a very popular locations for employees to meet, but we didn't make accurate justification about the function or type of this shop from its name.
 
-# Select the dataset for ID 1 car 
-gps_stop_sf_selected <- gps_stop_sf %>%
-  filter(id==31)
-gps_path_selected <- gps_path %>%
-  filter(id==31)
-
-# Plot the map, GPS path and stop-by points
-tm_shape(bgmap) +
-  tm_rgb(bgmap, r = 1,g = 2,b = 3,
-       alpha = NA,
-       saturation = 1,
-       interpolate = TRUE,
-       max.value = 255) +
-  tm_shape(gps_stop_sf_selected) +
-  tm_dots(size = 0.075)+
-  tm_shape(gps_path_selected) +
-  tm_lines(col = "day",
-           lwd = 3,
-           text = ~paste("Day:", day,
-                      "<br>Car ID:", id))
-```
+![](images\15.png)
 
 
-## 8.1 Some Suspicious Activities
+## 8.5 Some Suspicious Activities
 1. Strange GPS Paths
 The GPA path of Cazar Gustav, whose carID is 9, was extremely chaos, and sometimes the path would cross some areas there were not roads. This GPS path was illogical and abnormal, and the probably reason was that GPS device was wrong or the user of this car liked to try some unusual shortcuts.
 
